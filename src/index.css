@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Stick+No+Bills:wght@200..800&display=swap');
+@font-face {
+  font-family: 'Monaco';
+  src: url('/font/Monaco.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hypermarket';
+  src: url('/font/hypermarket-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'VictorMono-Medium';
+  src: url('/font/VictorMono-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'VictorMono-Bold';
+  src: url('/font/VictorMono-Bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .font-stick-no-bills {
+    font-family: 'Stick No Bills', sans-serif;
+  }
+  .font-monaco {
+    font-family: 'Monaco', monospace;
+  }
+  .font-hypermarket {
+    font-family: 'Hypermarket', sans-serif;
+  }
+  .font-victor-mono-medium {
+    font-family: 'VictorMono-Medium', monospace;
+  }
+  .font-victor-mono-bold {
+    font-family: 'VictorMono-Bold', monospace;
+  }
+}
+
+
+
+/* Custom slider styles */
+input[type="range"] {
+  @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply appearance-none w-4 h-4 bg-blue-500 rounded-full cursor-pointer;
+}
+
+
+
