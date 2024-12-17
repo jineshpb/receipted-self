@@ -11,8 +11,13 @@ const ImageGenerator = () => {
   const blocks = ["\u2588", "\u2589", "\u258A", "\u258B", "\u258C", "\u258D", "\u258E", "\u258F", " "];
 
   const setup = (p5, canvasParentRef) => {
-    // Calculate canvas size based on screen width
-    const canvasSize = p5.windowWidth < 1024 ? p5.windowWidth * 0.8 : 1024;
+    // New canvas sizing logic
+    let canvasSize;
+    if (p5.windowWidth < 1024) {
+      canvasSize = p5.windowWidth;
+    } else {
+      canvasSize = p5.windowHeight;
+    }
     
     const canvas = p5.createCanvas(canvasSize, canvasSize);
     canvas.parent(canvasParentRef);
@@ -70,55 +75,57 @@ const ImageGenerator = () => {
   };
 
   const windowResized = (p5) => {
-    const canvasSize = p5.windowWidth < 1024 ? p5.windowWidth * 0.8 : 1024;
+    let canvasSize;
+    if (p5.windowWidth < 1024) {
+      canvasSize = p5.windowWidth;
+    } else {
+      canvasSize = p5.windowHeight;
+    }
     p5.resizeCanvas(canvasSize, canvasSize);
   };
 
   return (
-    <div className="min-h-screen h-screen flex flex-row bg-[#B9BFC8] font-victor-mono-medium">
-        <div className=" w-full h-full justify-between flex flex-col pl-8 py-8">
+    <div className="min-h-screen w-screen lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium">
+      {/* Canvas container - now first on mobile, second on desktop */}
+      <div className="w-full order-1 lg:order-2 lg:h-screen">
+        <Sketch setup={setup} draw={draw} keyTyped={keyTyped} windowResized={windowResized} />
+      </div>
+
+      {/* Content container - now second on mobile, first on desktop */}
+      <div className="w-full lg:w-full order-2 lg:order-1 lg:h-screen flex flex-col pl-8 py-8">
+        <div className='flex flex-col flex-1'>
+          <div className='border-b-[1px] w-full border-gray-400'>
+            <h1 className="text-2xl font-semibold text-gray-800 font-victor-mono-bold">Jinesh P Bhaskaran</h1>
+            <p className='text-gray-500 mb-1'>UI/UX designer</p>
+          </div>
+          <div className='flex flex-row mt-4'>
             <div className='flex flex-col'>
-                <div className='border-b-[1px] w-full border-gray-400'>
-                    <h1 className="text-2xl font-semibold text-gray-800 font-victor-mono-bold">Jinesh P Bhaskaran</h1>
-                    <p className='text-gray-500 mb-1'>UI/UX designer</p>
-                
-                </div>
-                <div className='flex flex-row mt-4'>
-                        <div className='flex flex-col'>
-                        <p>Staff Designer: Walmart</p>
-                        <p className='text-gray-500'>2024 - 2025</p>
-                        </div>
-                    </div>
-
+              <p>Staff Designer: Walmart</p>
+              <p className='text-gray-500'>2024 - 2025</p>
             </div>
-           
+          </div>
+        </div>
 
-            <div className='flex flex-col gap-4 mb-4'>
-                <div className='flex flex-col'>
-                    <p className='text-gray-500 mb-1'>Email</p>
-                    <p className='text-gray-500 mb-1'>jinesh.p.bhaskaran@gmail.com</p>
-                </div>
-                <div className='flex flex-col'>
-                    <p className='text-gray-500 mb-1'>Socials</p>
-                    <div className='flex flex-row gap-4'>
-
-                    <a target='_blank' href='https://www.linkedin.com/in/jineshpb/' className='text-gray-500 mb-1 hover:text-gray-800'>LinkedIn</a>
-                    <a target='_blank' href='https://www.instagram.com/arcdesignz99/' className='text-gray-500 mb-1 hover:text-gray-800'>Instagram</a>
-                    <a target='_blank' href='https://www.behance.net/jineshpb' className='text-gray-500 mb-1 hover:text-gray-800'>Behance</a>
-                    <a target='_blank' href='https://jineshpb.me' className='text-gray-500 mb-1 hover:text-gray-800'>Personal website</a>
-                    </div>
-                </div>  
-                <div className='flex flex-row gap-2'>
-                    <p className='text-gray-500 mb-1'>Credits</p>
-                   <a href="https://x.com/samdape" className='text-gray-500 mb-1 hover:text-gray-800'>Sam Dape</a>
-                </div>
+        <div className='flex flex-col gap-4 mb-4 mt-12'>
+          <div className='flex flex-col'>
+            <p className='text-gray-500 mb-1'>Email</p>
+            <p className='text-gray-500 mb-1'>jinesh.p.bhaskaran@gmail.com</p>
+          </div>
+          <div className='flex flex-col'>
+            <p className='text-gray-500 mb-1'>Socials</p>
+            <div className='flex flex-row gap-4'>
+              <a target='_blank' href='https://www.linkedin.com/in/jineshpb/' className='text-gray-500 mb-1 hover:text-gray-800'>LinkedIn</a>
+              <a target='_blank' href='https://www.instagram.com/arcdesignz99/' className='text-gray-500 mb-1 hover:text-gray-800'>Instagram</a>
+              <a target='_blank' href='https://www.behance.net/jineshpb' className='text-gray-500 mb-1 hover:text-gray-800'>Behance</a>
+              <a target='_blank' href='https://jineshpb.me' className='text-gray-500 mb-1 hover:text-gray-800'>Personal website</a>
             </div>
+          </div>  
+          <div className='flex flex-row gap-2'>
+            <p className='text-gray-500 mb-1'>Credits</p>
+            <a href="https://x.com/samdape" className='text-gray-500 mb-1 hover:text-gray-800'>Sam Dape</a>
+          </div>
         </div>
-   
-        <div className="w-full h-screen ">
-          <Sketch setup={setup} draw={draw} keyTyped={keyTyped} windowResized={windowResized} />
-        </div>
-   
+      </div>
     </div>
   );
 };
