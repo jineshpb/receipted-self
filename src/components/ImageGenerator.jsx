@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Sketch from 'react-p5';
 
 const ImageGenerator = () => {
@@ -88,7 +88,9 @@ const ImageGenerator = () => {
     <div className="min-h-screen w-screen lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium">
       {/* Canvas container - now first on mobile, second on desktop */}
       <div className="w-full order-1 lg:order-2 lg:h-screen">
-        <Sketch setup={setup} draw={draw} keyTyped={keyTyped} windowResized={windowResized} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Sketch setup={setup} draw={draw} keyTyped={keyTyped} windowResized={windowResized} />
+        </Suspense>
       </div>
 
       {/* Content container - now second on mobile, first on desktop */}
@@ -101,7 +103,7 @@ const ImageGenerator = () => {
           <div className='flex flex-row mt-4'>
             <div className='flex flex-col'>
               <p>Staff Designer: Walmart</p>
-              <p className='text-gray-500'>2024 - 2025</p>
+              <p className='text-gray-500'>2024 - Today</p>
             </div>
           </div>
         </div>
