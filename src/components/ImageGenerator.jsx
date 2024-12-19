@@ -2,6 +2,9 @@ import React, { Suspense } from 'react';
 import Sketch from 'react-p5';
 
 const ImageGenerator = () => {
+  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [shouldRender, setShouldRender] = React.useState(false);
+
   let input;
   let img;
   let processed = false;
@@ -11,6 +14,13 @@ const ImageGenerator = () => {
   const blocks = ["\u2588", "\u2589", "\u258A", "\u258B", "\u258C", "\u258D", "\u258E", "\u258F", " "];
 
   const setup = (p5, canvasParentRef) => {
+    window._p5Instance = p5;
+    
+    // If there's a pending render, process it now
+    if (selectedFile && !processed) {
+      handleRender();
+    }
+
     // New canvas sizing logic
     let canvasSize;
     if (p5.windowWidth < 1024) {
@@ -24,15 +34,15 @@ const ImageGenerator = () => {
     p5.textFont("monospace", 12);
     p5.textAlign(p5.LEFT, p5.TOP);
 
-    // load image
-    img = p5.loadImage("jinesh.jpg", (data) => {
-      processed = true;
-      p5.redraw();
-    });
+    // // load image
+    // img = p5.loadImage("jinesh.jpg", (data) => {
+    //   processed = true;
+    //   p5.redraw();
+    // });
 
     p5.background(224);
     p5.fill(0);
-    p5.text("select an image file to process", 10, 40);
+    p5.text("Upload an image and click render", 10, 40);
   };
 
   const draw = (p5) => {
@@ -84,6 +94,33 @@ const ImageGenerator = () => {
     p5.resizeCanvas(canvasSize, canvasSize);
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+    processed = false;
+  };
+
+  const handleRender = () => {
+    const p5 = window._p5Instance;
+    
+    // If p5 isn't ready yet, wait for next setup call
+    if (!p5) {
+      setShouldRender(true);
+      return;
+    }
+    
+    if (!selectedFile) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img = p5.loadImage(e.target.result, () => {
+        processed = true;
+        setShouldRender(true);
+      });
+    };
+    reader.readAsDataURL(selectedFile);
+  };
+
   return (
     <div className="min-h-screen w-screen lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium">
       {/* Canvas container - now first on mobile, second on desktop */}
@@ -96,39 +133,52 @@ const ImageGenerator = () => {
       {/* Content container - now second on mobile, first on desktop */}
       <div className="w-full lg:w-full order-2 lg:order-1 lg:h-screen flex flex-col pl-8 py-8">
         <div className='flex flex-col flex-1'>
-          <div className='border-b-[1px] w-full border-gray-400'>
-            <h1 className="text-2xl font-semibold text-gray-800 font-victor-mono-bold">Jinesh P Bhaskaran</h1>
-            <p className='text-gray-500 mb-1'>UI/UX designer</p>
-          </div>
-          <div className='flex flex-row mt-4'>
-            <div className='flex flex-col'>
-              <p>Staff Designer: Walmart</p>
-              <p className='text-gray-500'>2024 - Today</p>
-            </div>
+          <h1 className=' text-4xl font-bold'>Receipted</h1>
+          <p className='mt-4 text-gray-500'>Upload a picture of square aspect ratio to get a receipt style image, Black and white images preferred</p>
+
+
+          
+          <div className="mt-4">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="mb-4"
+            />
+            <button
+              onClick={handleRender}
+              className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
+              disabled={!selectedFile}
+            >
+              Render Image
+            </button>
           </div>
         </div>
+        <div className='border-b-[1px] w-full border-gray-400 mt-12'>
+            <h1 className="text-lg font-semibold text-gray-800 font-victor-mono-bold">Jinesh P Bhaskaran</h1>
+            <p className='text-gray-500 mb-1'>UI/UX designer</p>
 
-        <div className='flex flex-col gap-4 mb-4 mt-12'>
-          <div className='flex flex-col'>
-            <p className='text-gray-500 mb-1'>Email</p>
-            <p className='text-gray-500 mb-1'>jinesh.p.bhaskaran@gmail.com</p>
-          </div>
-          <div className='flex flex-col'>
-            <p className='text-gray-500 mb-1'>Socials</p>
-            <div className='flex flex-row gap-4'>
+        </div>
+        <div>
+
+     
+         <div className='flex flex-col'>
+            <p className='text-gray-500 mb-1 mt-2'>Socials</p>
+            <div className='flex flex-row gap-1 flex-wrap'>
               <a target='_blank' href='https://www.linkedin.com/in/jineshpb/' className='text-gray-500 mb-1 hover:text-gray-800'>LinkedIn</a>
               <a target='_blank' href='https://www.instagram.com/arcdesignz99/' className='text-gray-500 mb-1 hover:text-gray-800'>Instagram</a>
               <a target='_blank' href='https://www.behance.net/jineshpb' className='text-gray-500 mb-1 hover:text-gray-800'>Behance</a>
               <a target='_blank' href='https://jineshpb.me' className='text-gray-500 mb-1 hover:text-gray-800'>Personal website</a>
             </div>
           </div>  
-          <div className='flex flex-row gap-2'>
-            <p className='text-gray-500 mb-1'>Credits</p>
+          <div className='flex flex-row gap-2 mt-2'>
+            <p className='text-gray-500 mb-1 '>Credits</p>
             <a href="https://x.com/samdape" className='text-gray-500 mb-1 hover:text-gray-800'>Sam Dape</a>
+          </div>
           </div>
         </div>
       </div>
-    </div>
+  
   );
 };
 
