@@ -138,28 +138,28 @@ const ImageGenerator = () => {
           </div>
         </div>
 
-        <div>
+        <div className='border-gray-400 mt-12 border-t-[1px] pt-4'>
    
-        <div className='border-b-[1px] flex flex-col gap-1 items-start w-full border-gray-400 mt-12 text-gray-500 '>
-            <h1 className=" font-semibold font-victor-mono-bold">Jinesh P Bhaskaran</h1>
-            <p className=' mb-1'>UI/UX designer</p>
-        </div>
+          <div className=' flex flex-col gap-1 items-start w-full  text-gray-500 '>
+              <h1 className=" font-semibold font-victor-mono-bold">Jinesh P Bhaskaran</h1>
+              <p className=' mb-1'>UI/UX designer</p>
+          </div>
 
-     
-         <div className='flex flex-col'>
-            <p className='text-gray-500 mb-1 mt-2'>Socials</p>
-            <div className='flex flex-row gap-1 flex-wrap'>
-              <a target='_blank' href='https://www.linkedin.com/in/jineshpb/' className='text-gray-500 mb-1 hover:text-gray-800'>LinkedIn</a>
-              <a target='_blank' href='https://www.instagram.com/arcdesignz99/' className='text-gray-500 mb-1 hover:text-gray-800'>Instagram</a>
-              <a target='_blank' href='https://www.behance.net/jineshpb' className='text-gray-500 mb-1 hover:text-gray-800'>Behance</a>
-              <a target='_blank' href='https://jineshpb.me' className='text-gray-500 mb-1 hover:text-gray-800'>Personal website</a>
+      
+          <div className='flex flex-col'>
+              <p className='text-gray-500 mb-1 mt-2'>Socials</p>
+              <div className='flex flex-row gap-1 flex-wrap'>
+                <a target='_blank' href='https://www.linkedin.com/in/jineshpb/' className='text-gray-500 mb-1 hover:text-gray-800'>LinkedIn</a>
+                <a target='_blank' href='https://www.instagram.com/arcdesignz99/' className='text-gray-500 mb-1 hover:text-gray-800'>Instagram</a>
+                <a target='_blank' href='https://www.behance.net/jineshpb' className='text-gray-500 mb-1 hover:text-gray-800'>Behance</a>
+                <a target='_blank' href='https://jineshpb.me' className='text-gray-500 mb-1 hover:text-gray-800'>Personal website</a>
+              </div>
+            </div>  
+            <div className='flex flex-row gap-2 mt-2'>
+              <p className='text-gray-500 mb-1 '>Credits</p>
+              <a href="https://x.com/samdape" className='text-gray-500 mb-1 hover:text-gray-800'>Sam Dape</a>
             </div>
-          </div>  
-          <div className='flex flex-row gap-2 mt-2'>
-            <p className='text-gray-500 mb-1 '>Credits</p>
-            <a href="https://x.com/samdape" className='text-gray-500 mb-1 hover:text-gray-800'>Sam Dape</a>
-          </div>
-          </div>
+            </div>
         </div>
       </div>
   
