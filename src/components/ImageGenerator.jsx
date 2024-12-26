@@ -4,8 +4,8 @@ import Sketch from "react-p5";
 const ImageGenerator = () => {
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [shouldRender, setShouldRender] = React.useState(false);
+  const [img, setImg] = React.useState(null);
 
-  let img;
   let cols = 150;
   let rows = 30;
 
@@ -144,16 +144,38 @@ const ImageGenerator = () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       console.log("Image loaded:", e.target.result);
-      img = p5.loadImage(e.target.result, () => {
-        setShouldRender(true);
-      });
+      setImg(
+        p5.loadImage(e.target.result, () => {
+          setShouldRender(true);
+        })
+      );
     };
     reader.readAsDataURL(selectedFile);
+  };
+
+  const handleDownload = () => {
+    console.log(img, "Downloading image");
+
+    const p5 = window._p5Instance;
+    if (p5 && img) {
+      p5.saveCanvas("receipted-image", "png");
+    }
   };
 
   return (
     <div className="min-h-screen w-full lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium ">
       <div className="w-full order-1 lg:order-2 lg:h-screen">
+        <button
+          onClick={handleDownload}
+          className={`px-4 py-2 bg-gray-800 text-white rounded absolute bottom-4 right-4 ${
+            img
+              ? "hover:bg-gray-700 cursor-pointer"
+              : "opacity-50 cursor-not-allowed"
+          }`}
+          disabled={!img}
+        >
+          Download image
+        </button>
         <Suspense fallback={<div>Loading...</div>}>
           <Sketch
             setup={setup}
