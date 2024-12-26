@@ -21,26 +21,44 @@ const ImageGenerator = () => {
     " ",
   ];
 
+  // Memoize the resize handler to maintain reference
+  const handleResize = React.useCallback((p5) => {
+    const parentElement = p5.canvas.parentElement;
+    if (parentElement) {
+      p5.resizeCanvas(parentElement.offsetWidth, parentElement.offsetHeight);
+      setShouldRender(true);
+    }
+  }, []);
+
   const setup = (p5, canvasParentRef) => {
     window._p5Instance = p5;
 
-    // Get parent container dimensions
     const parentWidth = canvasParentRef.offsetWidth;
     const parentHeight = canvasParentRef.offsetHeight;
 
-    console.log(parentWidth, parentHeight);
-
-    // Create canvas with minimum dimensions if parent size is not available
     const canvas = p5.createCanvas(parentWidth, parentHeight);
     canvas.parent(canvasParentRef);
 
-    // Set initial styles
+    // Store the bound resize handler
+    window._resizeHandler = () => handleResize(p5);
+    window.addEventListener("resize", window._resizeHandler);
+
     p5.textFont("monospace", 12);
     p5.textAlign(p5.LEFT, p5.TOP);
     p5.background(224);
     p5.fill(0);
     p5.text("Upload an image and click render", 10, 40);
   };
+
+  // Clean up with the correct reference
+  React.useEffect(() => {
+    return () => {
+      if (window._resizeHandler) {
+        window.removeEventListener("resize", window._resizeHandler);
+        delete window._resizeHandler;
+      }
+    };
+  }, []);
 
   const draw = (p5) => {
     if (!img) return;
@@ -162,6 +180,18 @@ const ImageGenerator = () => {
     }
   };
 
+  const handleSampleImageClick = (sampleNumber) => {
+    const p5 = window._p5Instance;
+    if (!p5) return;
+
+    console.log(`Loading sample image ${sampleNumber}`);
+    setImg(
+      p5.loadImage(`sample-${sampleNumber}.jpg`, () => {
+        setShouldRender(true);
+      })
+    );
+  };
+
   return (
     <div className="min-h-screen w-full lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium ">
       <div className="w-full order-1 lg:order-2 lg:h-screen">
@@ -187,12 +217,35 @@ const ImageGenerator = () => {
       </div>
 
       <div className="w-full lg:w-full order-2 lg:order-1 lg:h-screen flex flex-col pl-8 py-8">
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 pr-4">
           <h1 className=" text-4xl font-bold">Receipted</h1>
           <p className="mt-4 text-gray-500">
             Upload a picture of square aspect ratio to get a receipt style
             image, Black and white images preferred
           </p>
+
+          <p className="mt-4 text-gray-500"> Image styles that works well 👇</p>
+
+          <div className="grid grid-cols-3 p-4 gap-4 w-full">
+            <img
+              src="sample-1.jpg"
+              alt="Sample 1"
+              className="w-full rounded-lg h-auto object-cover aspect-square cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => handleSampleImageClick(1)}
+            />
+            <img
+              src="sample-2.jpg"
+              alt="Sample 2"
+              className="w-full rounded-lg h-auto object-cover aspect-square cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => handleSampleImageClick(2)}
+            />
+            <img
+              src="sample-3.jpg"
+              alt="Sample 3"
+              className="w-full rounded-lg h-auto object-cover aspect-square cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => handleSampleImageClick(3)}
+            />
+          </div>
 
           <div className="mt-4">
             <input
