@@ -5,7 +5,6 @@ const ImageGenerator = () => {
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [shouldRender, setShouldRender] = React.useState(false);
 
-  let input;
   let img;
   let cols = 150;
   let rows = 30;
@@ -25,11 +24,19 @@ const ImageGenerator = () => {
   const setup = (p5, canvasParentRef) => {
     window._p5Instance = p5;
 
-    const canvas = p5.createCanvas(1024, 1024);
+    // Get parent container dimensions
+    const parentWidth = canvasParentRef.offsetWidth;
+    const parentHeight = canvasParentRef.offsetHeight;
+
+    console.log(parentWidth, parentHeight);
+
+    // Create canvas with minimum dimensions if parent size is not available
+    const canvas = p5.createCanvas(parentWidth, parentHeight);
     canvas.parent(canvasParentRef);
+
+    // Set initial styles
     p5.textFont("monospace", 12);
     p5.textAlign(p5.LEFT, p5.TOP);
-
     p5.background(224);
     p5.fill(0);
     p5.text("Upload an image and click render", 10, 40);
@@ -39,24 +46,54 @@ const ImageGenerator = () => {
     if (!img) return;
 
     if (shouldRender) {
-      let buffer = p5.createGraphics(1024, 1024);
-      buffer.image(img, 0, 0);
-
-      let size = Math.min(img.width, img.height);
-      let x = (img.width - size) / 2;
-      let y = (img.height - size) / 2;
-
-      img = buffer.get(x, y, size, size);
-      img.resize(1024, 1024);
-
+      // Clear canvas
       p5.background("#B9BFC8");
+
+      // Get parent container dimensions
+      const parentWidth = p5.width;
+      const parentHeight = p5.height;
+
+      // Calculate dimensions maintaining aspect ratio
+      let targetWidth, targetHeight;
+      if (img.width > img.height) {
+        // Landscape image - fit to container width
+        targetWidth = parentWidth;
+        targetHeight = (targetWidth * img.height) / img.width;
+
+        // If calculated height exceeds container, scale down
+        if (targetHeight > parentHeight) {
+          targetHeight = parentHeight;
+          targetWidth = (targetHeight * img.width) / img.height;
+        }
+      } else {
+        // Portrait or square image - fit to container height
+        targetHeight = parentHeight;
+        targetWidth = (targetHeight * img.width) / img.height;
+
+        // If calculated width exceeds container, scale down
+        if (targetWidth > parentWidth) {
+          targetWidth = parentWidth;
+          targetHeight = (targetWidth * img.height) / img.width;
+        }
+      }
+
+      // Create buffer with correct aspect ratio
+      let buffer = p5.createGraphics(targetWidth, targetHeight);
+      buffer.image(img, 0, 0, targetWidth, targetHeight);
+
+      // Center the output
+      const xOffset = (p5.width - targetWidth) / 2;
+      const yOffset = (p5.height - targetHeight) / 2;
+      p5.translate(xOffset, yOffset);
+
+      // Process the image
       let bright = 1.2;
       cols = 150;
-      rows = p5.int((cols * img.height) / img.width / 2);
-      let w = p5.width / cols;
-      let h = p5.height / rows;
+      rows = p5.int((cols * targetHeight) / targetWidth / 2);
+      let w = targetWidth / cols;
+      let h = targetHeight / rows;
 
-      img.loadPixels();
+      img.loadPixels(); // Make sure we load the pixels from the original image
 
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
@@ -78,7 +115,11 @@ const ImageGenerator = () => {
           p5.text(char, x * w, y * h);
         }
       }
-      setShouldRender(false);
+
+      // Only set shouldRender to false if the image was successfully processed
+      if (img.pixels) {
+        setShouldRender(false);
+      }
     }
   };
 
@@ -111,10 +152,15 @@ const ImageGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen w-full lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium overflow-hidden">
-      <div className="w-full order-1 lg:order-2 lg:h-full">
+    <div className="min-h-screen w-full lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium ">
+      <div className="w-full order-1 lg:order-2 lg:h-screen">
         <Suspense fallback={<div>Loading...</div>}>
-          <Sketch setup={setup} draw={draw} keyTyped={keyTyped} />
+          <Sketch
+            setup={setup}
+            draw={draw}
+            keyTyped={keyTyped}
+            className="w-full h-full"
+          />
         </Suspense>
       </div>
 
