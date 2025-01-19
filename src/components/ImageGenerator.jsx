@@ -33,8 +33,9 @@ const ImageGenerator = () => {
   const setup = (p5, canvasParentRef) => {
     window._p5Instance = p5;
 
+    // Get the parent div's dimensions
     const parentWidth = canvasParentRef.offsetWidth;
-    const parentHeight = canvasParentRef.offsetHeight;
+    const parentHeight = window.innerHeight; // Use window height instead of parent height
 
     const canvas = p5.createCanvas(parentWidth, parentHeight);
     canvas.parent(canvasParentRef);
@@ -193,11 +194,11 @@ const ImageGenerator = () => {
   };
 
   return (
-    <div className="min-h-screen w-full lg:justify-between flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium ">
-      <div className="w-full order-1 lg:order-2 lg:h-screen">
+    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[#B9BFC8] font-victor-mono-medium">
+      <div className="w-full h-[60vh] lg:h-screen relative">
         <button
           onClick={handleDownload}
-          className={`px-4 py-2 bg-gray-800 text-white rounded absolute bottom-4 right-4 ${
+          className={`px-4 py-2 bg-gray-800 text-white rounded absolute bottom-4 right-4 z-10 ${
             img
               ? "hover:bg-gray-700 cursor-pointer"
               : "opacity-50 cursor-not-allowed"
@@ -216,7 +217,7 @@ const ImageGenerator = () => {
         </Suspense>
       </div>
 
-      <div className="w-full lg:w-full order-2 lg:order-1 lg:h-screen flex flex-col pl-8 py-8">
+      <div className="w-full lg:w-full lg:h-screen flex flex-col p-8">
         <div className="flex flex-col flex-1 pr-4">
           <h1 className=" text-4xl font-bold">Receipted</h1>
           <p className="mt-4 text-gray-500">
