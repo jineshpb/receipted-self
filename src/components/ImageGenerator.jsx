@@ -220,10 +220,56 @@ const ImageGenerator = () => {
       <div className="w-full lg:w-full lg:h-screen flex flex-col p-8">
         <div className="flex flex-col flex-1 pr-4">
           <h1 className=" text-4xl font-bold">Receipted</h1>
+          
           <p className="mt-4 text-gray-500">
             Upload a picture of square aspect ratio to get a receipt style
             image, Black and white images preferred
           </p>
+
+          {/* Add subscription plans banner */}
+          <div className="mt-8 mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-6 bg-white rounded-lg shadow-md">
+              <h3 className="text-xl font-bold mb-2">Free</h3>
+              <p className="text-gray-600 mb-4">Perfect for casual users</p>
+              <ul className="text-gray-500 mb-4">
+                <li>• 5 images per day</li>
+                <li>• Basic resolution</li>
+                <li>• Standard support</li>
+              </ul>
+              <p className="text-2xl font-bold mb-4">$0</p>
+              <button className="w-full px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
+                Current Plan
+              </button>
+            </div>
+
+            <div className="p-6 bg-white rounded-lg shadow-md border-2 border-gray-800">
+              <h3 className="text-xl font-bold mb-2">Pro</h3>
+              <p className="text-gray-600 mb-4">For regular creators</p>
+              <ul className="text-gray-500 mb-4">
+                <li>• Unlimited images</li>
+                <li>• HD resolution</li>
+                <li>• Priority support</li>
+              </ul>
+              <p className="text-2xl font-bold mb-4">$9.99/mo</p>
+              <button className="w-full px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
+                Upgrade to Pro
+              </button>
+            </div>
+
+            <div className="p-6 bg-white rounded-lg shadow-md">
+              <h3 className="text-xl font-bold mb-2">Enterprise</h3>
+              <p className="text-gray-600 mb-4">For businesses</p>
+              <ul className="text-gray-500 mb-4">
+                <li>• API access</li>
+                <li>• Custom resolution</li>
+                <li>• Dedicated support</li>
+              </ul>
+              <p className="text-2xl font-bold mb-4">Contact us</p>
+              <button className="w-full px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700">
+                Contact Sales
+              </button>
+            </div>
+          </div>
 
           <p className="mt-4 text-gray-500"> Image styles that works well 👇</p>
 
